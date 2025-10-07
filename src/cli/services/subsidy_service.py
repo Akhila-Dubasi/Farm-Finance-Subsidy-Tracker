@@ -1,5 +1,5 @@
 # src/cli/services/subsidy_service.py
-from cli.dao.subsidy_dao import SubsidyDAO
+from src.cli.dao.subsidy_dao import SubsidyDAO
 
 class SubsidyService:
     @staticmethod

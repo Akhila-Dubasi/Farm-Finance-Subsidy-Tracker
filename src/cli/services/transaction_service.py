@@ -1,5 +1,5 @@
 # src/cli/services/transaction_service.py
-from cli.dao.transaction_dao import TransactionDAO
+from src.cli.dao.transaction_dao import TransactionDAO
 
 class TransactionService:
     @staticmethod
