@@ -1,5 +1,5 @@
 # src/cli/services/crop_service.py
-from src.cli.dao.crop_dao import CropDAO
+from cli.dao.crop_dao import CropDAO
 
 class CropService:
     @staticmethod

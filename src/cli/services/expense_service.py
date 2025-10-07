@@ -1,5 +1,5 @@
 # src/cli/services/expense_service.py
-from src.cli.dao.expense_dao import ExpenseDAO
+from cli.dao.expense_dao import ExpenseDAO
 
 class ExpenseService:
     @staticmethod

@@ -1,5 +1,5 @@
 # src/cli/services/farm_service.py
-from src.cli.dao.farm_dao import FarmDAO
+from cli.dao.farm_dao import FarmDAO
 
 class FarmService:
     @staticmethod
