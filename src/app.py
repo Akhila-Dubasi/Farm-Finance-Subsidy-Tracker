@@ -2,7 +2,7 @@
 import streamlit as st
 from datetime import date
 
-# Services imports (adjusted for src folder)
+# Services imports
 from cli.services.farmer_service import FarmerService
 from cli.services.farm_service import FarmService
 from cli.services.crop_service import CropService
@@ -26,33 +26,46 @@ def login_signup():
         name = st.text_input("Name")
         phone = st.text_input("Phone")
         if st.button("Signup"):
+            if not name or not phone:
+                st.warning("Please enter both name and phone.")
+                return
             farmer = FarmerService.add_farmer(name, phone)
-            st.success(f"Farmer created: {farmer[0]['name']}")
+            if farmer:
+                st.success(f"Farmer created: {farmer[0]['name']}")
+                st.session_state.farmer_id = farmer[0]['id']
+                st.session_state.farmer_name = farmer[0]['name']
+                st.rerun()
     else:
         st.subheader("Login")
-        farmers = FarmerService.list_farmers()
-        if farmers:
-            farmer_dict = {f"{f['name']} ({f['phone']})": f['id'] for f in farmers}
-            selected = st.selectbox("Select your account", list(farmer_dict.keys()))
-            if st.button("Login"):
-                st.session_state.farmer_id = farmer_dict[selected]
-                st.session_state.farmer_name = selected
-                st.success(f"Logged in as {selected}")
-        else:
-            st.info("No farmers found. Please signup first.")
+        name = st.text_input("Name")
+        phone = st.text_input("Phone")
+        if st.button("Login"):
+            farmers = FarmerService.list_farmers()
+            found = None
+            for f in farmers:
+                if f['name'] == name and f['phone'] == phone:
+                    found = f
+                    break
+            if found:
+                st.session_state.farmer_id = found['id']
+                st.session_state.farmer_name = found['name']
+                st.success(f"Logged in as {found['name']}")
+                st.rerun()
+            else:
+                st.error("No matching farmer found. Please check name and phone or signup.")
 
 # --- Dashboard Page ---
 def dashboard():
     st.sidebar.title(f"Welcome, {st.session_state.farmer_name}")
 
-    # --- Fetch all data for stats ---
+    # --- Fetch all data ---
     farms = FarmService.list_farms_by_farmer(st.session_state.farmer_id)
     crops = CropService.list_crops_by_farmer(st.session_state.farmer_id)
     subsidies = SubsidyService.list_subsidies_by_farmer(st.session_state.farmer_id)
     expenses = ExpenseService.list_expenses_by_farmer(st.session_state.farmer_id)
     transactions = TransactionService.list_transactions_by_farmer(st.session_state.farmer_id)
 
-    # --- Sidebar Statistics ---
+    # --- Sidebar Stats ---
     st.sidebar.subheader("Your Stats")
     st.sidebar.metric("Farms", len(farms))
     st.sidebar.metric("Crops", len(crops))
@@ -65,7 +78,7 @@ def dashboard():
     if menu == "Logout":
         st.session_state.farmer_id = None
         st.session_state.farmer_name = None
-        st.experimental_rerun()
+        st.rerun()
 
     # --- Farms Section ---
     if menu == "Farms":
@@ -88,6 +101,9 @@ def dashboard():
     elif menu == "Crops":
         st.header("Crops")
         farm_dict = {f["name"]: f["id"] for f in farms}
+        if not farm_dict:
+            st.info("Add a farm first to add crops.")
+            return
         with st.form("Add Crop"):
             farm_selected = st.selectbox("Select Farm", list(farm_dict.keys()))
             name = st.text_input("Crop Name")
@@ -123,6 +139,9 @@ def dashboard():
     elif menu == "Expenses":
         st.header("Expenses")
         farm_dict = {f["name"]: f["id"] for f in farms}
+        if not farm_dict:
+            st.info("Add a farm first to add expenses.")
+            return
         with st.form("Add Expense"):
             farm_selected = st.selectbox("Select Farm", list(farm_dict.keys()))
             amount = st.number_input("Amount")

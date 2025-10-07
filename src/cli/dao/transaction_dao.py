@@ -6,17 +6,31 @@ class TransactionDAO:
 
     @staticmethod
     def insert(data):
-        return supabase.table(TransactionDAO.TABLE).insert(data).execute().data
+        return supabase.table(TransactionDAO.TABLE).insert(data).execute()
 
     @staticmethod
-    def list_all():
-        res = supabase.table(TransactionDAO.TABLE).select("*").execute()
-        return res.data or []
+    def update(transaction_id, data):
+        return supabase.table(TransactionDAO.TABLE).update(data).eq("id", transaction_id).execute()
 
     @staticmethod
-    def update(tx_id, data):
-        return supabase.table(TransactionDAO.TABLE).update(data).eq("id", tx_id).execute().data
+    def delete(transaction_id):
+        return supabase.table(TransactionDAO.TABLE).delete().eq("id", transaction_id).execute()
 
     @staticmethod
-    def delete(tx_id):
-        return supabase.table(TransactionDAO.TABLE).delete().eq("id", tx_id).execute().data
+    def get_all():
+        response = supabase.table(TransactionDAO.TABLE).select("*").execute()
+        return response.data if response.data else []
+
+    @staticmethod
+    def get_by_farmer(farmer_id):
+        response = supabase.table(TransactionDAO.TABLE).select("*").eq("farmer_id", farmer_id).execute()
+        return response.data if response.data else []
+
+    @staticmethod
+    def get_by_id(transaction_id):
+        response = supabase.table(TransactionDAO.TABLE).select("*").eq("id", transaction_id).execute()
+        return response.data[0] if response.data else None
+    @staticmethod
+    def insert(tx_data):
+        response = supabase.table(TransactionDAO.TABLE).insert(tx_data).execute()
+        return response.data

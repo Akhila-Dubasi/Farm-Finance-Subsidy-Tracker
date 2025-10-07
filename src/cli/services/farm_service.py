@@ -22,3 +22,7 @@ class FarmService:
     @staticmethod
     def delete_farm(farm_id):
         return FarmDAO.delete(farm_id)
+    @staticmethod
+    def add_farm(farmer_id, name, area, location):
+        farm_data = {"farmer_id": farmer_id, "name": name, "area": area, "location": location}
+        return FarmDAO.insert(farm_data)

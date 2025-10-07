@@ -22,3 +22,7 @@ class CropService:
     @staticmethod
     def delete_crop(crop_id):
         return CropDAO.delete(crop_id)
+    @staticmethod
+    def add_crop(farm_id, name, season):
+        crop_data = {"farm_id": farm_id, "name": name, "season": season}
+        return CropDAO.insert(crop_data)

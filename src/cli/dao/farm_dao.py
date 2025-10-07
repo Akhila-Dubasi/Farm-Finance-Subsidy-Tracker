@@ -7,7 +7,10 @@ class FarmDAO:
     @staticmethod
     def insert(data):
         return supabase.table(FarmDAO.TABLE).insert(data).execute()
-
+    @staticmethod
+    def insert(farm_data):
+        response = supabase.table(FarmDAO.TABLE).insert(farm_data).execute()
+        return response.data
     @staticmethod
     def update(farm_id, data):
         return supabase.table(FarmDAO.TABLE).update(data).eq("id", farm_id).execute()

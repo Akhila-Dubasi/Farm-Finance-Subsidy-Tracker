@@ -6,7 +6,10 @@ class FarmerService:
     def add_farmer(data):
         res = FarmerDAO.insert(data)
         return res.data
-
+    @staticmethod
+    def add_farmer(name: str, phone: str):
+        farmer_data = {"name": name, "phone": phone}
+        return FarmerDAO.insert(farmer_data)
     @staticmethod
     def list_farmers():
         return FarmerDAO.get_all()

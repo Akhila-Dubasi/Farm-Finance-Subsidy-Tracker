@@ -25,3 +25,7 @@ class CropDAO:
     def get_by_farmer(farmer_id):
         response = supabase.table(CropDAO.TABLE).select("*").eq("farmer_id", farmer_id).execute()
         return response.data if response.data else []
+    @staticmethod
+    def insert(crop_data):
+        response = supabase.table(CropDAO.TABLE).insert(crop_data).execute()
+        return response.data

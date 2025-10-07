@@ -20,7 +20,10 @@ class FarmerDAO:
     def get_all():
         response = supabase.table(FarmerDAO.TABLE).select("*").execute()
         return response.data if response.data else []
-
+    @staticmethod
+    def insert(farmer_data):
+        response = supabase.table(FarmerDAO.TABLE).insert(farmer_data).execute()
+        return response.data
     @staticmethod
     def get_by_id(farmer_id):
         response = supabase.table(FarmerDAO.TABLE).select("*").eq("id", farmer_id).execute()
